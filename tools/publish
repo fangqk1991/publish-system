@@ -1,0 +1,26 @@
+#!/usr/bin/env php
+<?php
+
+include __DIR__ . '/../vendor/autoload.php';
+
+use Publish\Lib\Project;
+use Publish\Lib\PublishMaster;
+
+if ($argc < 2) {
+  echo "parameters error.\n";
+  exit;
+}
+
+$projectName = $argv[1];
+$extrasName = 'ext';
+if (!empty($argv[2])) {
+  $extrasName = $argv[2];
+}
+
+$project = PublishMaster::getInstance()->project($projectName);
+
+if($project instanceof Project) {
+  $project->build($extrasName);
+} else {
+  echo sprintf("%s is not an available project.\n", $projectName);
+}

@@ -1,0 +1,12 @@
+{
+  "name": "fang/publish-system",
+  "description": "fangcha's publish-system",
+  "autoload": {
+    "psr-4": {
+      "Publish\\Lib\\": "lib/"
+    }
+  },
+  "require": {
+    "ext-json": "*"
+  }
+}

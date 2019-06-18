@@ -1,0 +1,58 @@
+#!/bin/bash
+
+__FILE__="$0"
+REAL_FILE=`readlink "${__FILE__}"`
+if [ ! -z "${REAL_FILE}" ]; then
+    __FILE__="${REAL_FILE}"
+fi
+
+__DIR__=`cd "$(dirname "${__FILE__}")"; pwd`
+
+{{$exeBefore}}
+
+projectName="{{$projectName}}"
+sourceDir="{{$sourceDir}}"
+remoteHost="{{$remoteHost}}"
+remotePath="{{$remotePath}}"
+
+if [ -z "${projectName}" ]; then
+    echo 'projectName error!'
+    exit
+fi
+
+if [ ! -d "${sourceDir}" ]; then
+    echo 'sourceDir error!'
+    exit
+fi
+
+if [ -z "${remoteHost}" ] || [ -z "${remotePath}" ]; then
+    echo 'remote info error!'
+    exit
+fi
+
+BIN="${__DIR__}/${projectName}"
+if [ ! -d "${BIN}" ]; then
+    mkdir "${BIN}"
+fi
+rm -rf "${BIN}"/*
+
+rsync -av {{$excludeInfo}} "${sourceDir}" "${BIN}"
+
+cd ${__DIR__}
+tmpFile="tmp.${projectName}.tgz"
+
+tar -czf "${tmpFile}" -C ${BIN} .
+
+ssh ${remoteHost} "cd ~; {{$publishBefore}}"
+scp "${tmpFile}" "${remoteHost}:${remotePath}"
+ssh ${remoteHost} "cd ${remotePath}; tar --no-overwrite-dir -xzf ${tmpFile}; rm ${tmpFile}; {{$publishAfter}}"
+
+rm "${tmpFile}"
+rm "$0"
+rm -rf "${BIN}"
+
+{{$exeAfter}}
+
+echo "Succeeded."
+
+

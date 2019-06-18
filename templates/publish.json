@@ -1,0 +1,27 @@
+{
+    "source_dir": "${__DIR__}/",
+    "ignores": [
+        ".git",
+        ".DS_Store",
+        ".idea",
+        "/vendor/",
+        "composer.lock",
+        "/publish.*json"
+    ],
+    "exe_before": [
+
+    ],
+    "exe_after": [
+
+    ],
+    "remote": {
+        "host": "${REMOTE_HOST}",
+        "target_dir": "${REMOTE_PATH}",
+        "publish_before": [
+
+        ],
+        "publish_after": [
+
+        ]
+    }
+}
